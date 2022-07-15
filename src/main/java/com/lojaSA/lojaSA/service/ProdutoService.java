@@ -19,7 +19,7 @@ public class ProdutoService {
 
     public ProdutoResponse inserirProduto(ProdutoEntradaRequest entradaProduto){
         if (entradaProduto.getQuantidade() < 1) return null;
-        if (entradaProduto.getValidade().isAfter(LocalDate.now())) return null;
+        if (entradaProduto.getValidade().isBefore(LocalDate.now())) return null;
         if (entradaProduto.getValor().compareTo(BigDecimal.ZERO) <= 0 ) return null;
         if (entradaProduto.getNome().length() == 0) return null;
         Produto produto = ProdutosConverter.convertProdutoEntradaRequestToProduto(entradaProduto);
@@ -30,6 +30,7 @@ public class ProdutoService {
     public ProdutoResponse buscarProduto(String id){
         Produto produto = produtoRepository.findById(id).orElse(null);
         if (produto == null) return null;
+        if (produto.getAtivo() == false) return null;
         return ProdutosConverter.convertProdutoToProdutoResponse(produto);
     }
     public List <ProdutoResponse> buscarProdutos(){
@@ -45,7 +46,7 @@ public class ProdutoService {
     }
     public ProdutoResponse atualizarProduto(String id,ProdutoEntradaRequest produtoEntradaRequest) {
         if (produtoEntradaRequest.getQuantidade() < 1) return null;
-        if (produtoEntradaRequest.getValidade().isAfter(LocalDate.now())) return null;
+        if (produtoEntradaRequest.getValidade().isBefore(LocalDate.now())) return null;
         if (produtoEntradaRequest.getValor().compareTo(BigDecimal.ZERO) <= 0 ) return null;
         if (produtoEntradaRequest.getNome().length() == 0) return null;
         Produto produto = produtoRepository.findById(id).orElse(null);

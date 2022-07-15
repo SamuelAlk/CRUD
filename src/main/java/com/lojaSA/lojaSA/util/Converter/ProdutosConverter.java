@@ -5,6 +5,7 @@ import com.lojaSA.lojaSA.model.dto.request.ProdutoEntradaRequest;
 import com.lojaSA.lojaSA.model.dto.response.ProdutoResponse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProdutosConverter {
@@ -19,6 +20,7 @@ public class ProdutosConverter {
     }
     public static ProdutoResponse convertProdutoToProdutoResponse (Produto produto){
         return ProdutoResponse.builder()
+                .id(produto.getId())
                 .descricao(produto.getDescricao())
                 .nome(produto.getNome())
                 .quantidade(produto.getQuantidade())
@@ -27,6 +29,6 @@ public class ProdutosConverter {
                 .build();
     }
     public static List<ProdutoResponse> mapProdutoToProdutoResponse (List<Produto> produtos){
-        return produtos.stream().map(produto -> convertProdutoToProdutoResponse(produto)).collect(Collectors.toList());
+        return produtos.stream().filter(produto -> produto.getAtivo() == true).map(produto -> convertProdutoToProdutoResponse(produto)).collect(Collectors.toList());
     }
 }
